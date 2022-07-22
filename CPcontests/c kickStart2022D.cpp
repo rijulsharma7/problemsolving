@@ -1,0 +1,105 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+using ll = long long;
+using vl = vector<ll>;using vvl = vector<vl>;using vs = vector<string>;
+using ml = map<ll, ll>;using uml = unordered_map<ll, ll>;
+using pl = pair<ll, ll>;using tl = tuple<ll, ll, ll>;
+using vll = vector<pl>;using vlll = vector<tl>;
+using pq = priority_queue <ll, vl, greater<ll>>;using gq = priority_queue <ll>;
+#define mem(dp) memset(dp, -1, sizeof(dp))
+#define aut(a, b) for (auto&(a) : (b))
+#define out(v) for (auto&(x) : (v)) cout << x << " "; cout << '\n';
+#define rep(i, n) for (ll (i) = 0; (i) < (n); ++(i) )
+#define repp(i, n) for (ll (i) = 1; (i) <= (n); ++(i) )
+#define rev(i, n) for (ll (i) = n-1; (i) >= 0; --(i) )
+#define revv(i, n) for (ll (i) = n; (i) > 0; --(i) )
+#define inc(v) rep(i, v.size()) cin>>v[i];
+#define dec(v) rep(i, v.size()) cout<<v[i]<<" ";
+#define inp(n) ll n; cin>>n;
+#define all(v) v.begin(), v.end()
+#define fi get<0>
+#define se get<1>
+#define th get<2>
+#define F first
+#define S second
+#define mp make_pair
+#define mt make_tuple
+#define pb push_back
+ll inf = 1e18; ll mod = 1e9 + 7;
+bool compare(ll a, ll b) {return a > b;}
+ll digit(ll n) {return floor(log10(n) + 1);}
+
+bool chk(vl v)
+{
+    set<ll> s;
+    for(auto x:v)
+    {
+        if(s.find(x)!=s.end()) return false;
+        s.insert(x);
+    }
+    return true;
+}
+map<pl, ll> mpp;
+ll rec(vl &v, ll i, unordered_map<ll, vl> mp, ll y)
+{
+    if(i==0) return 0;
+    
+    if(mpp.find({i, y}) != mpp.end()) return mpp[{i, y}];
+    
+    ll res=INT_MAX;
+    for(auto x:mp[v[i-1]])
+    {
+        res = min(res, abs(y-x)+rec(v, i-1, mp, x));
+    }
+    return mpp[{i, y}] = res;
+}
+
+void calc()
+{
+    inp(n); vl v(n); inc(v);
+    inp(m); vl vv(m); inc(vv);
+    bool f=chk(vv);
+    if(f)
+    {
+        uml mp;
+        rep(i, m) {mp[vv[i]]=i;}
+        ll res=0;
+        for(ll i=1; i<n; i++) res += abs(mp[v[i]]-mp[v[i-1]]);
+        cout<<res;
+    }
+    else
+    {
+        unordered_map<ll, vl> mp;
+        rep(i, m) {mp[vv[i]].push_back(i);}
+        ll res=INT_MAX;
+        mpp.clear();
+        for(auto x:mp[v[n-1]])
+        {
+            res = min(res, rec(v, n-1, mp, x));
+        }
+        cout<<res;
+    }
+}
+
+int main()
+{
+// #ifndef ONLINE_JUDGE
+//     freopen("input.txt", "r", stdin);
+//     freopen("output.txt", "w", stdout);
+// #endif
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int t = 1;
+    cin >> t;
+    repp(z, t)
+    {
+        cout << "Case #" << z << ": ";
+        calc();
+        cout << '\n';
+    }
+
+    return 0;
+}
